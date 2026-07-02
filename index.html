@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>福岡快閃代購團</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: #f5f4f0;
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+
+  .form-wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 1rem 1rem 2rem;
+  }
+
+  .header {
+    text-align: center;
+    padding: 1.5rem 0 1.25rem;
+  }
+  .header .flag { font-size: 36px; display: block; margin-bottom: 8px; }
+  .header h1 { font-size: 20px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+  .header p { font-size: 13px; color: #666; }
+
+  .section {
+    background: #fff;
+    border: 0.5px solid #e0ddd6;
+    border-radius: 14px;
+    padding: 1rem 1.125rem;
+    margin-bottom: 12px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 9px;
+  }
+
+  select, input[type="text"], textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 0.5px solid #d8d5ce;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #1a1a1a;
+    background: #fff;
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  select:focus, input[type="text"]:focus, textarea:focus {
+    border-color: #7F77DD;
+    box-shadow: 0 0 0 3px rgba(127,119,221,0.12);
+  }
+
+  .select-wrap { position: relative; }
+  .select-wrap .arrow {
+    position: absolute; right: 11px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px; color: #999; pointer-events: none;
+  }
+
+  .qty-row { display: flex; align-items: center; gap: 14px; }
+  .qty-btn {
+    width: 38px; height: 38px;
+    border: 0.5px solid #d8d5ce;
+    border-radius: 10px;
+    background: #f5f4f0;
+    font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #1a1a1a; flex-shrink: 0;
+    transition: background 0.1s;
+  }
+  .qty-btn:active { background: #ebe9e4; }
+  .qty-num { font-size: 20px; font-weight: 600; min-width: 28px; text-align: center; }
+  .qty-limit { font-size: 12px; color: #999; }
+
+  .upload-area {
+    border: 1.5px dashed #c8c5bd;
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+    background: #faf9f7;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .upload-area:active { border-color: #7F77DD; }
+  .upload-area input[type="file"] {
+    position: absolute; inset: 0; opacity: 0;
+    cursor: pointer; font-size: 0; width: 100%; height: 100%;
+  }
+  .upload-area .up-icon { font-size: 30px; color: #aaa; display: block; margin-bottom: 6px; }
+  .upload-area .up-text { font-size: 14px; color: #666; }
+  .upload-area .up-sub { font-size: 11px; color: #aaa; margin-top: 3px; }
+
+  .img-preview { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .img-thumb {
+    width: 76px; height: 76px;
+    border-radius: 10px; object-fit: cover;
+    border: 0.5px solid #e0ddd6;
+  }
+
+  textarea { min-height: 72px; resize: none; line-height: 1.5; }
+
+  .submit-btn {
+    width: 100%; padding: 14px;
+    background: #534AB7; color: #fff;
+    border: none; border-radius: 14px;
+    font-size: 16px; font-weight: 600;
+    cursor: pointer; margin-top: 4px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .submit-btn:active { background: #433ba0; transform: scale(0.98); }
+  .submit-btn i { font-size: 18px; }
+
+  .footer-note {
+    text-align: center; font-size: 12px;
+    color: #aaa; margin-top: 10px; padding-bottom: 1rem;
+  }
+
+  /* Success screen */
+  .success {
+    display: none; text-align: center;
+    padding: 3rem 1rem 2rem;
+  }
+  .success .s-icon {
+    font-size: 52px; color: #1D9E75;
+    display: block; margin-bottom: 14px;
+  }
+  .success h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  .success .s-msg { font-size: 15px; color: #555; line-height: 1.6; }
+  .new-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    margin-top: 1.75rem; padding: 12px 24px;
+    background: #fff; border: 0.5px solid #d8d5ce;
+    border-radius: 12px; font-size: 15px; font-weight: 500;
+    color: #1a1a1a; cursor: pointer; font-family: inherit;
+    transition: background 0.1s;
+  }
+  .new-btn:active { background: #f0ede8; }
+</style>
+</head>
+<body>
+<div class="form-wrap">
+  <div id="theform">
+    <div class="header">
+      <span class="flag">🇯🇵</span>
+      <h1>福岡快閃代購團</h1>
+      <p>選好想買的東西，一鍵送出給我</p>
+    </div>
+
+    <!-- 姓名 -->
+    <div class="section">
+      <div class="section-label">你是誰</div>
+      <input type="text" id="requesterName" placeholder="輸入你的名字或暱稱" />
+    </div>
+
+    <!-- 商品 -->
+    <div class="section">
+      <div class="section-label">想買的商品</div>
+      <div class="select-wrap" style="margin-bottom:10px">
+        <select id="productKnown">
+          <option value="">— 選擇常見商品 —</option>
+          <optgroup label="🍪 甜點伴手禮">
+            <option>明月堂 梅ヶ枝餅</option>
+            <option>博多通りもん（通門）</option>
+            <option>にわか煎餅</option>
+            <option>チロルチョコ（博多限定）</option>
+            <option>博多八ばん</option>
+          </optgroup>
+          <optgroup label="🍬 軟糖餅乾零食">
+            <option>UHA 味覺糖 軟糖</option>
+            <option>明治 果汁軟糖</option>
+            <option>Calbee 薯條三兄弟</option>
+            <option>白い恋人餅乾</option>
+            <option>東ハト 卡樂比餅乾</option>
+          </optgroup>
+          <optgroup label="🍜 泡麵飲料食品">
+            <option>一蘭拉麵（袋裝）</option>
+            <option>一風堂拉麵（袋裝）</option>
+            <option>日清 UFO炒麵</option>
+            <option>茅乃舍高湯包</option>
+          </optgroup>
+          <optgroup label="💊 痠痛貼布">
+            <option>撒隆巴斯（サロンパス）標準款</option>
+            <option>撒隆巴斯 EX 加強版貼布</option>
+            <option>撒隆巴斯 溫感貼布</option>
+            <option>久光製藥 Hisamitsu 貼布</option>
+            <option>久光製藥 MOVEit 貼布</option>
+            <option>小林製藥 Relip 痠痛貼布</option>
+            <option>バンテリン（Vantelin）護膝／護腰支撐帶</option>
+          </optgroup>
+          <optgroup label="👁️ 眼藥水">
+            <option>Rohto 樂敦 清涼眼藥水（一般款）</option>
+            <option>Rohto 樂敦 極冷款（Lycee / Cube）</option>
+            <option>Rohto 防過敏眼藥水 Allercut</option>
+            <option>參天製藥 Sante FX Neo 眼藥水</option>
+            <option>參天製藥 Sante PC 護眼藥水（抗藍光）</option>
+            <option>參天製藥 Vita 40α 維他命眼藥水</option>
+            <option>Eyebon 洗眼液</option>
+          </optgroup>
+          <optgroup label="🦟 蚊蟲叮咬">
+            <option>ムヒ（Muhi）蚊蟲叮咬止癢液</option>
+            <option>ムヒ EX 加強版止癢液</option>
+            <option>ムヒ S 兒童款止癢</option>
+            <option>キンカン（金冠）止癢水</option>
+            <option>池田模範堂 液體蚊蟲藥</option>
+            <option>天使のスキンベープ 防蚊噴霧（兒童用）</option>
+          </optgroup>
+          <optgroup label="💪 保健食品">
+            <option>DHC 膠原蛋白錠</option>
+            <option>DHC 多種維他命</option>
+            <option>DHC 葉酸</option>
+            <option>大正製藥 LIVITA 護肝錠</option>
+            <option>命之母 A（女性保健）</option>
+            <option>小林製藥 納豆激酶</option>
+            <option>小林製藥 紅麴（紅麹コレステヘルプ）</option>
+            <option>新谷酵素 夜遲系列</option>
+            <option>FANCL 芳珂 系列保健品</option>
+          </optgroup>
+          <optgroup label="💄 藥妝保養">
+            <option>Hada Labo 肌研化妝水</option>
+            <option>資生堂 SENKA 洗顏乳</option>
+            <option>小林製藥 去黑頭系列</option>
+            <option>EVE 止痛藥</option>
+            <option>正露丸</option>
+            <option>龍角散喉糖</option>
+          </optgroup>
+        </select>
+        <i class="ti ti-chevron-down arrow" aria-hidden="true"></i>
+      </div>
+      <input type="text" id="productCustom" placeholder="找不到？自行輸入商品名稱或關鍵字" />
+    </div>
+
+    <!-- 數量 -->
+    <div class="section">
+      <div class="section-label">數量</div>
+      <div class="qty-row">
+        <button class="qty-btn" id="qtyMinus" aria-label="減少數量">−</button>
+        <span class="qty-num" id="qtyNum">1</span>
+        <button class="qty-btn" id="qtyPlus" aria-label="增加數量">+</button>
+
+      </div>
+    </div>
+
+    <!-- 預算 -->
+    <div class="section">
+      <div class="section-label">預算上限（單件）</div>
+      <div class="select-wrap">
+        <select id="budget">
+          <option value="">不限</option>
+          <option>¥500 以下</option>
+          <option>¥500 – ¥1,000</option>
+          <option>¥1,000 – ¥2,000</option>
+          <option>¥2,000 – ¥3,000</option>
+          <option>¥3,000 以上</option>
+        </select>
+        <i class="ti ti-chevron-down arrow" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <!-- 圖片 -->
+    <div class="section">
+      <div class="section-label">上傳參考圖片（可多張）</div>
+      <div class="upload-area">
+        <input type="file" id="imgInput" accept="image/*" multiple aria-label="上傳商品圖片" />
+        <i class="ti ti-camera-plus up-icon" aria-hidden="true"></i>
+        <p class="up-text">點擊拍照 或 選取相片</p>
+        <p class="up-sub">支援 JPG、PNG、HEIC</p>
+      </div>
+      <div class="img-preview" id="imgPreview"></div>
+    </div>
+
+    <!-- 備註 -->
+    <div class="section">
+      <div class="section-label">備註（選填）</div>
+      <textarea id="noteText" placeholder="例如：口味偏好、幾mg的款式、不要某種成分等…"></textarea>
+    </div>
+
+    <button class="submit-btn" id="submitBtn">
+      <i class="ti ti-send" aria-hidden="true"></i> 送出需求
+    </button>
+    <p class="footer-note">送出後可繼續新增其他商品 ✨</p>
+  </div>
+
+  <!-- 成功畫面 -->
+  <div class="success" id="successBox">
+    <i class="ti ti-circle-check s-icon" aria-hidden="true"></i>
+    <h2>已送出！</h2>
+    <p class="s-msg" id="successMsg"></p>
+    <button class="new-btn" id="newRequestBtn">
+      <i class="ti ti-plus" aria-hidden="true"></i> 再新增一個商品
+    </button>
+  </div>
+</div>
+
+<script>
+  let qty = 1;
+  document.getElementById('qtyMinus').addEventListener('click', () => {
+    if (qty > 1) { qty--; document.getElementById('qtyNum').textContent = qty; }
+  });
+  document.getElementById('qtyPlus').addEventListener('click', () => {
+    qty++; document.getElementById('qtyNum').textContent = qty;
+  });
+
+  document.getElementById('imgInput').addEventListener('change', function () {
+    const preview = document.getElementById('imgPreview');
+    Array.from(this.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'img-thumb';
+        img.alt = file.name;
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    const name = document.getElementById('requesterName').value.trim() || '未填姓名';
+    const prod = document.getElementById('productKnown').value ||
+                 document.getElementById('productCustom').value.trim() || '未填商品';
+    document.getElementById('successMsg').textContent =
+      `${name}，「${prod} × ${qty}」已記錄！我會幫你找找看 🛍️`;
+    document.getElementById('theform').style.display = 'none';
+    document.getElementById('successBox').style.display = 'block';
+  });
+
+  document.getElementById('newRequestBtn').addEventListener('click', () => {
+    document.getElementById('requesterName').value = '';
+    document.getElementById('productKnown').value = '';
+    document.getElementById('productCustom').value = '';
+    qty = 1; document.getElementById('qtyNum').textContent = 1;
+    document.getElementById('budget').value = '';
+    document.getElementById('imgPreview').innerHTML = '';
+    document.getElementById('noteText').value = '';
+    document.getElementById('theform').style.display = 'block';
+    document.getElementById('successBox').style.display = 'none';
+  });
+</script>
+</body>
+</html>
