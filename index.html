@@ -334,14 +334,36 @@
     });
   });
 
-  document.getElementById('submitBtn').addEventListener('click', () => {
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhQc5kVVpBEN5RllYBtsnYSsl67ZZg-h6OMmcdEUxLPlyrYYjdnC9t52qbyspvZ1UcMQ/exec';
+
+  document.getElementById('submitBtn').addEventListener('click', async () => {
     const name = document.getElementById('requesterName').value.trim() || '未填姓名';
     const prod = document.getElementById('productKnown').value ||
                  document.getElementById('productCustom').value.trim() || '未填商品';
+    const budget = document.getElementById('budget').value || '不限';
+    const note = document.getElementById('noteText').value.trim();
+
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> 送出中…';
+    btn.disabled = true;
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, product: prod, qty, budget, note })
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
     document.getElementById('successMsg').textContent =
       `${name}，「${prod} × ${qty}」已記錄！我會幫你找找看 🛍️`;
     document.getElementById('theform').style.display = 'none';
     document.getElementById('successBox').style.display = 'block';
+    btn.innerHTML = '<i class="ti ti-send" aria-hidden="true"></i> 送出需求';
+    btn.disabled = false;
   });
 
   document.getElementById('newRequestBtn').addEventListener('click', () => {
