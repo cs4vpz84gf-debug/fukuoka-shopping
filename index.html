@@ -275,22 +275,10 @@
       </div>
     </div>
 
-    <!-- 圖片 -->
-    <div class="section">
-      <div class="section-label">上傳參考圖片（可多張）</div>
-      <div class="upload-area">
-        <input type="file" id="imgInput" accept="image/*" multiple aria-label="上傳商品圖片" />
-        <i class="ti ti-camera-plus up-icon" aria-hidden="true"></i>
-        <p class="up-text">點擊拍照 或 選取相片</p>
-        <p class="up-sub">支援 JPG、PNG、HEIC</p>
-      </div>
-      <div class="img-preview" id="imgPreview"></div>
-    </div>
-
     <!-- 備註 -->
     <div class="section">
       <div class="section-label">備註（選填）</div>
-      <textarea id="noteText" placeholder="例如：口味偏好、幾mg的款式、不要某種成分等…"></textarea>
+      <textarea id="noteText" placeholder="例如：口味偏好、幾mg的款式、不要某種成分等。參考圖片請直接傳 LINE 給我 📸"></textarea>
     </div>
 
     <button class="submit-btn" id="submitBtn">
@@ -319,20 +307,6 @@
     qty++; document.getElementById('qtyNum').textContent = qty;
   });
 
-  document.getElementById('imgInput').addEventListener('change', function () {
-    const preview = document.getElementById('imgPreview');
-    Array.from(this.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.className = 'img-thumb';
-        img.alt = file.name;
-        preview.appendChild(img);
-      };
-      reader.readAsDataURL(file);
-    });
-  });
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhQc5kVVpBEN5RllYBtsnYSsl67ZZg-h6OMmcdEUxLPlyrYYjdnC9t52qbyspvZ1UcMQ/exec';
 
@@ -372,7 +346,6 @@
     document.getElementById('productCustom').value = '';
     qty = 1; document.getElementById('qtyNum').textContent = 1;
     document.getElementById('budget').value = '';
-    document.getElementById('imgPreview').innerHTML = '';
     document.getElementById('noteText').value = '';
     document.getElementById('theform').style.display = 'block';
     document.getElementById('successBox').style.display = 'none';
